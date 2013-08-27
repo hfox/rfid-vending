@@ -1,0 +1,10 @@
+# Editor swap
+*.swp
+*~
+
+# Object
+*.o
+
+# Output
+client RFID-simple
+

@@ -6,5 +6,6 @@
 *.o
 
 # Output
-client RFID-simple
+client
+RFID-simple
 

@@ -1,8 +1,9 @@
+CC=gcc
 CFLAGS=-Wall -Wextra -pedantic
-LDFLAGS=-lphidget21
+LDFLAGS=-shared -lphidget21
 BINS=client RFID-simple
 
-all: client RFID-simple
+all: client
 
 clean:
 	rm -f $(BINS) *.o
@@ -11,9 +12,6 @@ clean:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 client: client.o 
-	$(CC) $(LDFLAGS) -o $@ $<
-
-RFID-simple:RFID-simple.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
 

@@ -1,7 +1,9 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -pedantic -ggdb
 LDFLAGS=-shared -lphidget21
-BINS=client RFID-simple
+WORKAROUNDFLAGS=
+BINS=client RFID-simple client-workaround
+LIBFILES=/usr/local/lib/libphidget21.so
 
 all: client
 
@@ -14,4 +16,6 @@ clean:
 client: client.o 
 	$(CC) $(LDFLAGS) -o $@ $<
 
+client-workaround: client.o
+	$(CC) $(WORKAROUNDFLAGS) -o $@ $< $(LIBFILES)
 

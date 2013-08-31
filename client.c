@@ -97,11 +97,11 @@ int networker(char* hostname, unsigned char data[], int length)
 /*	scanf("%7c.%2c",&buffer[11],&buffer[19]);*/
 	
 	
-	printf("\nstring in buffer: %s\n", buffer);
-	
+	printf("\nsending buffer: %s\n", buffer);
 	write(sock,buffer,16);
 	
-	
+	read(sock, buffer, 10);
+	printf("\nreceived buffer: %s\n", buffer);
 	
 	free(buffer);
 	close(sock);

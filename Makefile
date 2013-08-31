@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -pedantic
+CFLAGS=-Wall -Wextra -pedantic -ggdb
 LDFLAGS=-shared -lphidget21
 BINS=client RFID-simple
 

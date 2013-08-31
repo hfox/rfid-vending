@@ -54,7 +54,7 @@ while ($client_addr = accept(CLIENT, SERVER)) {
 	print "card is: ",$card,"\n";
 	print "cost is: ",$cost,"\n";
 	
-	my $sth = $dbh->prepare("SELECT id,name,card,saldo FROM rustvaluta.\"Accounts\" WHERE card=E'\\\\x".$card."'");
+	my $sth = $dbh->prepare("SELECT id,name,card,saldo FROM rustvaluta.accounts WHERE card=E'\\\\x".$card."'");
 	$sth->execute();
 	if($sth->rows()==0)
 	{
@@ -79,8 +79,8 @@ while ($client_addr = accept(CLIENT, SERVER)) {
 		if ($create)
 		{
 			$name =~ s/[\n\t\r]//;
-			$dbh->do("INSERT INTO rustvaluta.\"Accounts\"(name,card,saldo) VALUES ('".$name."',E'\\\\x".$card."',0)");
-			$sth = $dbh->prepare("SELECT id,name,card,saldo FROM rustvaluta.\"Accounts\" WHERE card=E'\\\\x".$card."'");
+			$dbh->do("INSERT INTO rustvaluta.accounts (name,card,saldo) VALUES ('".$name."',E'\\\\x".$card."',0)");
+			$sth = $dbh->prepare("SELECT id,name,card,saldo FROM rustvaluta.accounts WHERE card=E'\\\\x".$card."'");
 			$sth->execute();
 			
 		} else {
@@ -99,9 +99,9 @@ while ($client_addr = accept(CLIENT, SERVER)) {
 	if($ref->{'saldo'}>=$cost)
 	{
 		my $rows;
-		$rows = $dbh->do("UPDATE rustvaluta.\"Accounts\" SET saldo=".($ref->{'saldo'}-$cost)."WHERE card=E'\\\\x".$card."'");
+		$rows = $dbh->do("UPDATE rustvaluta.accounts SET saldo=".($ref->{'saldo'}-$cost)."WHERE card=E'\\\\x".$card."'");
 		print "Updated account balance.\n" if $rows;
-		$rows = $dbh->do("INSERT INTO rustvaluta.\"Transactions\"(account,change) VALUES(".$ref->{id}.",".-$cost.")");
+		$rows = $dbh->do("INSERT INTO rustvaluta.transactions (account,change, timestamp ) VALUES(".$ref->{id}.",".-$cost.", NOW() )");
 		print "Created transaction.\n" if $rows;
 		print CLIENT "1";
 	} else {

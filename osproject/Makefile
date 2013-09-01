@@ -62,7 +62,8 @@ main.c \
 vending.c \
 rfid.c \
 network.c \
-logic.c
+logic.c \
+display.c
 
 # Compile and link the OS
 SRC += \
@@ -133,6 +134,7 @@ CFLAGS += -std=gnu99
 
 
 CFLAGS += -D __AVR_LIBC_DEPRECATED_ENABLE__
+CFLAGS += -ggdb
 
 
 

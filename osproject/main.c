@@ -107,6 +107,7 @@ Changes from V4.0.5
 #include "rfid.h"
 #include "network.h"
 #include "logic.h"
+#include "display.h"
 
 /* Priority definitions for most of the tasks in the demo application.  Some
 tasks just use the idle priority. */
@@ -115,6 +116,7 @@ tasks just use the idle priority. */
 #define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
 
+#define mainDISPLAY_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainMAIN_LOGIC_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainRFID_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainDATABASE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -196,6 +198,8 @@ short main( void )
 		configMINIMAL_STACK_SIZE, NULL, mainDATABASE_TASK_PRIORITY, NULL );
 	xTaskCreate( vMainLogic, ( signed char * ) "Main logic",
 		configMINIMAL_STACK_SIZE, NULL, mainMAIN_LOGIC_TASK_PRIORITY, NULL );
+	xTaskCreate( vDisplay, ( signed char * ) "Display",
+		configMINIMAL_STACK_SIZE, NULL, mainDISPLAY_TASK_PRIORITY, NULL );
 
 	/* Create the co-routines that flash the LED's. */
 //	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );

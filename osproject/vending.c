@@ -14,3 +14,39 @@ void vListenToVendingMachine(void *pvParameters)
 	}
 }
 
+void vending_set_accept(void)
+{
+}
+
+void vending_set_deny(void)
+{
+}
+
+int vending_has_price(void)
+{
+	return 0;
+}
+
+void vending_reset_price(void)
+{
+}
+
+int vending_get_price(void)
+{
+	return 10;
+}
+
+int vending_has_state(void)
+{
+	return 0;
+}
+
+void vending_reset_state(void)
+{
+}
+
+int vending_get_state(void)
+{
+	return vendingSTATE_PENDING;
+}
+

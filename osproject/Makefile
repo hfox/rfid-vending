@@ -35,7 +35,7 @@
 
 
 # MCU name
-MCU = atmega323
+MCU = atmega328p
 
 # Output format. (can be srec, ihex, binary)
 FORMAT = ihex
@@ -55,7 +55,7 @@ OPT = s
 
 DEMO_DIR = ./osdir/Demo/Common/Minimal
 SOURCE_DIR = ./osdir/Source
-PORT_DIR = ./osdir/Source/portable/GCC/ATMega323
+PORT_DIR = ./atmega328p
 
 SRC	= \
 main.c \

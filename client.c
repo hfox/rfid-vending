@@ -225,7 +225,7 @@ int rfid_simple(char *usrptr)
 	CPhidget_open((CPhidgetHandle)rfid, -1);
 
 	//get the program to wait for an RFID device to be attached
-	printf("Waiting for RFID to be attached....");
+	printf("Waiting for RFID to be attached....\n");
 	if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
 	{
 		CPhidget_getErrorDescription(result, &err);

@@ -88,7 +88,7 @@ Changes from V2.6.0
 #define portCLEAR_COUNTER_ON_MATCH				( ( unsigned char ) 0x08 )
 #define portPRESCALE_64							( ( unsigned char ) 0x03 )
 #define portCLOCK_PRESCALER						( ( unsigned long ) 64 )
-#define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( unsigned char ) 0x10 )
+#define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( unsigned char ) 0x02 )
 
 /*-----------------------------------------------------------*/
 

@@ -90,6 +90,8 @@ Changes from V2.6.0
 #define portCLOCK_PRESCALER						( ( unsigned long ) 64 )
 #define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( unsigned char ) 0x02 )
 
+#define SIG_OUTPUT_COMPARE1A					TIMER1_COMPA_vect
+
 /*-----------------------------------------------------------*/
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know

@@ -112,7 +112,7 @@ DEMOINCDIR = ./osdir/Demo/Common/include
 #  -Wa,...:   tell GCC to pass this to the assembler.
 #    -ahlms:  create assembler listing
 
-DEBUG_LEVEL=-g
+DEBUG_LEVEL=-ggdb
 WARNINGS=-Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
 		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
 
@@ -134,7 +134,6 @@ CFLAGS += -std=gnu99
 
 
 CFLAGS += -D __AVR_LIBC_DEPRECATED_ENABLE__
-CFLAGS += -ggdb
 
 
 
@@ -179,11 +178,12 @@ LDFLAGS += -lm
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = stk500
+AVRDUDE_PROGRAMMER = arduino
 
 
-AVRDUDE_PORT = com1	   # programmer connected to serial device
+#AVRDUDE_PORT = com1	   # programmer connected to serial device
 #AVRDUDE_PORT = lpt1	# programmer connected to parallel port
+AVRDUDE_PORT = /dev/ttyACM3
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep

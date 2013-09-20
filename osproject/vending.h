@@ -1,4 +1,4 @@
-#define mainVENDING_CHECK_PERIOD		( ( portTickType ) 3000 / portTICK_RATE_MS  )
+#define mainVENDING_CHECK_PERIOD		( ( portTickType ) 10 / portTICK_RATE_MS  )
 
 #define vendingSTATE_PENDING			1
 #define vendingSTATE_SUCCESS			2
@@ -17,3 +17,4 @@ int vending_has_state(void);
 void vending_reset_state(void);
 int vending_get_state(void);
 
+char vending_running(void);

@@ -41,7 +41,7 @@ MCU = atmega328p
 FORMAT = ihex
 
 # Target file name (without extension).
-TARGET = rtosdemo
+TARGET = rfid-vending
 
 # Optimization level, can be [0, 1, 2, 3, s]. 0 turns off optimization.
 # (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
@@ -187,6 +187,12 @@ AVRDUDE_PORT = /dev/ttyACM3
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
+
+AVRDUDE_READ_FLASH = -U flash:r:$(TARGET).flash.dump.hex:i
+AVRDUDE_READ_EEPROM = -U eeprom:r:$(TARGET).eeprom.dump.hex:i
+AVRDUDE_READ_LFUSE = -U lfuse:r:$(TARGET).lfuse.dump.hex:i
+AVRDUDE_READ_HFUSE = -U hfuse:r:$(TARGET).hfuse.dump.hex:i
+AVRDUDE_READ_EFUSE = -U efuse:r:$(TARGET).efuse.dump.hex:i
 
 AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 
@@ -338,6 +344,11 @@ program: $(TARGET).hex $(TARGET).eep
 
 
 
+
+
+# Read the flash and the EEPROM and dump to files
+read:
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_READ_FLASH) $(AVRDUDE_READ_EEPROM) $(AVRDUDE_READ_LFUSE) $(AVRDUDE_READ_HFUSE) $(AVRDUDE_READ_EFUSE)
 
 # Create final output files (.hex, .eep) from ELF output file.
 %.hex: %.elf

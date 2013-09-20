@@ -4,6 +4,8 @@
 
 #include "network.h"
 
+static unsigned int count = 0;
+
 static char card[20];
 static int price;
 
@@ -14,6 +16,7 @@ void vListenToDatabaseServer(void *pvParameters)
 
 	for(;;) {
 		vTaskDelay( mainDATABASE_CHECK_PERIOD );
+		count++;
 	}
 }
 
@@ -45,6 +48,19 @@ int network_get_reply(void)
 
 void network_reset_reply(void)
 {
+}
+
+char network_running(void)
+{
+	static unsigned int saved_count = 0;
+
+	if (count == saved_count) {
+		saved_count = count;
+		return 0;
+	} else {
+		saved_count = count;
+		return 1;
+	}
 }
 
 

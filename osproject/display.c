@@ -4,6 +4,8 @@
 
 #include "display.h"
 
+static unsigned int count = 0;
+
 void vDisplay(void *pvParameters)
 {
 	/* The parameters are not used. */
@@ -11,6 +13,7 @@ void vDisplay(void *pvParameters)
 
 	for(;;) {
 		vTaskDelay( mainDISPLAY_PERIOD );
+		count++;
 	}
 }
 
@@ -30,4 +33,16 @@ void display_set_deny(void)
 {
 }
 
+char display_running(void)
+{
+	static unsigned int saved_count = 0;
+
+	if (count == saved_count) {
+		saved_count = count;
+		return 0;
+	} else {
+		saved_count = count;
+		return 1;
+	}
+}
 

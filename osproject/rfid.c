@@ -4,6 +4,8 @@
 
 #include "rfid.h"
 
+static unsigned int count = 0;
+
 static char card[20];
 
 void vListenToRfidReader(void *pvParameters)
@@ -13,6 +15,7 @@ void vListenToRfidReader(void *pvParameters)
 
 	for(;;) {
 		vTaskDelay( mainRFID_CHECK_PERIOD );
+		count++;
 	}
 }
 
@@ -42,6 +45,19 @@ int rfid_has_timeout(void)
 
 void rfid_reset_has_timeout(void)
 {
+}
+
+char rfid_running(void)
+{
+	static unsigned int saved_count = 0;
+
+	if (count == saved_count) {
+		saved_count = count;
+		return 0;
+	} else {
+		saved_count = count;
+		return 1;
+	}
 }
 
 

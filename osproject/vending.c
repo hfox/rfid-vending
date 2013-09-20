@@ -4,6 +4,8 @@
 
 #include "vending.h"
 
+static unsigned int count = 0;
+
 void vListenToVendingMachine(void *pvParameters)
 {
 	/* The parameters are not used. */
@@ -11,6 +13,7 @@ void vListenToVendingMachine(void *pvParameters)
 
 	for(;;) {
 		vTaskDelay( mainVENDING_CHECK_PERIOD );
+		count++;
 	}
 }
 
@@ -48,5 +51,18 @@ void vending_reset_state(void)
 int vending_get_state(void)
 {
 	return vendingSTATE_PENDING;
+}
+
+char vending_running(void)
+{
+	static unsigned int saved_count = 0;
+
+	if (count == saved_count) {
+		saved_count = count;
+		return 0;
+	} else {
+		saved_count = count;
+		return 1;
+	}
 }
 

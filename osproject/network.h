@@ -1,4 +1,4 @@
-#define mainDATABASE_CHECK_PERIOD		( ( portTickType ) 3000 / portTICK_RATE_MS  )
+#define mainDATABASE_CHECK_PERIOD		( ( portTickType ) 100 / portTICK_RATE_MS  )
 
 #define networkACCEPT		1
 #define networkDENY		2
@@ -13,3 +13,4 @@ int network_has_reply(void);
 int network_get_reply(void);
 void network_reset_reply(void);
 
+char network_running(void);

@@ -68,6 +68,7 @@ tasks just use the idle priority. */
 
 /* The period between executions of the check task. */
 #define mainCHECK_PERIOD				( ( portTickType ) 2000 / portTICK_RATE_MS  )
+#define mainERROR_PERIOD				( ( portTickType ) 250 / portTICK_RATE_MS )
 
 /* An address in the EEPROM used to count resets.  This is used to check that
 the demo application is not unexpectedly resetting. */
@@ -96,6 +97,10 @@ static void prvIncrementResetCount( void );
 void vApplicationIdleHook( void );
 
 static void initWatchDog(void);
+static void led_init(void);
+static void led_toggle(void);
+
+static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -130,17 +135,17 @@ short main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-static volatile unsigned long ulDummyVariable = 3UL;
+	static volatile unsigned long ulDummyVariable = 3UL;
 
 	/* The parameters are not used. */
 	( void ) pvParameters;
 
 	// Initialize LED
-	DDRB |= 1 << PB5;
+	led_init();
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
-	for( ;; )
+	while (xErrorHasOccurred == pdFALSE)
 	{
 		vTaskDelay( mainCHECK_PERIOD );
 
@@ -151,14 +156,19 @@ static volatile unsigned long ulDummyVariable = 3UL;
 		
 		prvCheckOtherTasksAreStillRunning();
 	}
+
+	// Show that an error has occured by toggling the LED quickly
+	for ( ;; )
+	{
+		vTaskDelay(mainERROR_PERIOD);
+		led_toggle();
+	}
 }
 
 /*-----------------------------------------------------------*/
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
-static portBASE_TYPE xErrorHasOccurred = pdFALSE;
-
 	if (! display_running())
 		xErrorHasOccurred = pdTRUE;
 	if (! logic_running())
@@ -173,7 +183,7 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 	if( xErrorHasOccurred == pdFALSE )
 	{
 		// Toggle the LED if everything is okay so we know if an error occurs
-		PORTB ^= 1 << PB5;
+		led_toggle();
 
 		// Reset the watchdog timer
 		wdt_reset();
@@ -183,7 +193,7 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 
 static void prvIncrementResetCount( void )
 {
-unsigned char ucCount;
+	unsigned char ucCount;
 
 	eeprom_read_block( &ucCount, mainRESET_COUNT_ADDRESS, sizeof( ucCount ) );
 	ucCount++;
@@ -214,5 +224,17 @@ static void initWatchDog(void)
 
 void vApplicationIdleHook( void )
 {
+}
+
+/*-----------------------------------------------------------*/
+
+void led_init(void)
+{
+	DDRB |= 1 << PB5;
+}
+
+void led_toggle(void)
+{
+	PORTB ^= 1 << PB5;
 }
 

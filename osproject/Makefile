@@ -59,38 +59,20 @@ logic.c \
 display.c
 
 # Compile and link Arduino libraries
-#CPPSRC = \
-#arduinocpp/SPI.cpp \
-#arduinocpp/SoftwareSerial.cpp \
-#arduinocpp/HardwareSerial.cpp \
-#ethernetcpp/Ethernet.cpp \
-#ethernetcpp/EthernetUdp.cpp \
-#ethernetcpp/EthernetClient.cpp \
-#ethernetcpp/w5100.cpp \
-#ethernetcpp/socket.cpp \
-#ethernetcpp/IPAddress.cpp
+SRC += \
+arduino/SPI.c \
+arduino/SoftwareSerial.c \
+arduino/HardwareSerial.c \
+ethernet/Ethernet.c \
+ethernet/EthernetUdp.c \
+ethernet/EthernetClient.c \
+ethernet/w5100.c \
+ethernet/socket.c \
+ethernet/IPAddress.c
 
-#SRC += \
-#arduinocpp/wiring.c \
-#arduinocpp/wiring_digital.c \
-#arduinocpp/pure_virtual.c
-
-# Compile and link Arduino libraries
-#SRC += \
-#arduinoc/SPI.c \
-#arduinoc/SoftwareSerial.c \
-#arduinoc/HardwareSerial.c \
-#ethernetc/Ethernet.c \
-#ethernetc/EthernetUdp.c \
-#ethernetc/EthernetClient.c \
-#ethernetc/w5100.c \
-#ethernetc/socket.c \
-#ethernetc/IPAddress.c
-
-#SRC += \
-#arduinoc/wiring.c \
-#arduinoc/wiring_digital.c \
-#arduinoc/pure_virtual.c
+SRC += \
+arduino/wiring.c \
+arduino/wiring_digital.c
 
 # Compile and link FreeRTOS
 SRC += \
@@ -115,7 +97,7 @@ ASRC =
 # List any extra directories to look for include files here.
 #     Each directory must be seperated by a space.
 
-EXTRAINCDIRS = ethernetcpp arduinocpp freertos/include atmega328p
+EXTRAINCDIRS = ethernet arduino freertos/include atmega328p
 
 EXTRADEFS = \
 -D F_CPU=16000000 \
@@ -137,6 +119,11 @@ EXTRADEFS = \
 DEBUG_LEVEL=-ggdb
 WARNINGS=-Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
 		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
+
+WARNINGS += \
+		-Wno-unused-parameter -Wno-unused-function -Wno-unused-variable \
+		-Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations \
+		-Wno-aggregate-return -Wno-shadow
 
 CFLAGS = -D GCC_MEGA_AVR $(EXTRADEFS) -I. \
 $(DEBUG_LEVEL) -O$(OPT) \

@@ -2,10 +2,24 @@
 *.swp
 *~
 
+# Dependency lists
+*.d
+
+# Compiled lists
+*.lst
+
 # Object
 *.o
 
-# Output
+# Misc output files
+*.elf
+*.hex
+*.eep
+*.lss
+*.map
+*.sym
+
+# Executables
 client
 RFID-simple
 client-workaround

@@ -67,7 +67,7 @@ tasks just use the idle priority. */
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
 
 /* The period between executions of the check task. */
-#define mainCHECK_PERIOD				( ( portTickType ) 2000 / portTICK_RATE_MS  )
+#define mainCHECK_PERIOD				( ( portTickType ) 1000 / portTICK_RATE_MS  )
 #define mainERROR_PERIOD				( ( portTickType ) 250 / portTICK_RATE_MS )
 
 /* An address in the EEPROM used to count resets.  This is used to check that
@@ -162,6 +162,10 @@ static void vErrorChecks( void *pvParameters )
 	{
 		vTaskDelay(mainERROR_PERIOD);
 		led_toggle();
+
+#if configHANG_ON_ERROR != 0
+		wdt_reset();
+#endif
 	}
 }
 

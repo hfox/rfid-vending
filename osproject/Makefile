@@ -49,13 +49,6 @@ OPT = s
 
 
 # List C source files here. (C dependencies are automatically generated.)
-#DEMO_DIR = ../Common/Minimal
-#SOURCE_DIR = ../../Source
-#PORT_DIR = ../../Source/portable/GCC/ATMega323
-
-DEMO_DIR = ./osdir/Demo/Common/Minimal
-SOURCE_DIR = ./osdir/Source
-PORT_DIR = ./atmega328p
 
 SRC	= \
 main.c \
@@ -65,24 +58,48 @@ network.c \
 logic.c \
 display.c
 
-# Compile and link the OS
+# Compile and link Arduino libraries
+#CPPSRC = \
+#arduinocpp/SPI.cpp \
+#arduinocpp/SoftwareSerial.cpp \
+#arduinocpp/HardwareSerial.cpp \
+#ethernetcpp/Ethernet.cpp \
+#ethernetcpp/EthernetUdp.cpp \
+#ethernetcpp/EthernetClient.cpp \
+#ethernetcpp/w5100.cpp \
+#ethernetcpp/socket.cpp \
+#ethernetcpp/IPAddress.cpp
+
+#SRC += \
+#arduinocpp/wiring.c \
+#arduinocpp/wiring_digital.c \
+#arduinocpp/pure_virtual.c
+
+# Compile and link Arduino libraries
+#SRC += \
+#arduinoc/SPI.c \
+#arduinoc/SoftwareSerial.c \
+#arduinoc/HardwareSerial.c \
+#ethernetc/Ethernet.c \
+#ethernetc/EthernetUdp.c \
+#ethernetc/EthernetClient.c \
+#ethernetc/w5100.c \
+#ethernetc/socket.c \
+#ethernetc/IPAddress.c
+
+#SRC += \
+#arduinoc/wiring.c \
+#arduinoc/wiring_digital.c \
+#arduinoc/pure_virtual.c
+
+# Compile and link FreeRTOS
 SRC += \
-$(SOURCE_DIR)/tasks.c \
-$(SOURCE_DIR)/queue.c \
-$(SOURCE_DIR)/list.c \
-$(SOURCE_DIR)/croutine.c \
-$(SOURCE_DIR)/portable/MemMang/heap_1.c \
-$(PORT_DIR)/port.c 
-
-
-# If there is more than one source file, append them above, or modify and
-# uncomment the following:
-#SRC += foo.c bar.c
-
-# You can also wrap lines by appending a backslash to the end of the line:
-#SRC += baz.c \
-#xyzzy.c
-
+freertos/tasks.c \
+freertos/queue.c \
+freertos/list.c \
+freertos/croutine.c \
+freertos/heap_1.c \
+freertos/port.c
 
 
 # List Assembler source files here.
@@ -97,12 +114,17 @@ ASRC =
 
 # List any extra directories to look for include files here.
 #     Each directory must be seperated by a space.
-EXTRAINCDIRS = 
 
-OSINCDIR = ./osdir/Source/include
-DEMOINCDIR = ./osdir/Demo/Common/include
+EXTRAINCDIRS = ethernetcpp arduinocpp freertos/include atmega328p
 
-
+EXTRADEFS = \
+-D F_CPU=16000000 \
+-D CONFIG_DISABLE_DNS \
+-D CONFIG_DISABLE_DHCP \
+-D CONFIG_DISABLE_UNNECESSARY_ETHERNET_BEGIN \
+-D CONFIG_DISABLE_ETHERNET_SERVER \
+-D CONFIG_DISABLE_STREAM_PRINT \
+-D CONFIG_DISABLE_ETHERNET_PRINT
 
 # Optional compiler flags.
 #  -g:        generate debugging information (for GDB, or for COFF conversion)
@@ -116,12 +138,20 @@ DEBUG_LEVEL=-ggdb
 WARNINGS=-Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
 		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
 
-CFLAGS = -D GCC_MEGA_AVR -I. -I $(OSINCDIR) -I $(DEMOINCDIR)  \
+CFLAGS = -D GCC_MEGA_AVR $(EXTRADEFS) -I. \
 $(DEBUG_LEVEL) -O$(OPT) \
 -fsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
 $(WARNINGS) \
 -Wa,-adhlns=$(<:.c=.lst) \
 $(patsubst %,-I%,$(EXTRAINCDIRS))
+
+CPPFLAGS = -D GCC_MEGA_AVR $(EXTRADEFS) -I. \
+$(DEBUG_LEVEL) -O$(OPT) \
+-fsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
+$(WARNINGS) \
+-Wa,-adhlns=$(<:.cpp=.lst) \
+$(patsubst %,-I%,$(EXTRAINCDIRS))
+
 
 
 # Set a "language standard" compiler flag.
@@ -131,9 +161,6 @@ $(patsubst %,-I%,$(EXTRAINCDIRS))
 #CFLAGS += -std=gnu89
 #CFLAGS += -std=c99
 CFLAGS += -std=gnu99
-
-
-CFLAGS += -D __AVR_LIBC_DEPRECATED_ENABLE__
 
 
 
@@ -227,6 +254,7 @@ DIRLIB = $(DIRAVR)/avr/lib
 SHELL = sh
 
 CC = avr-gcc
+CPP = avr-g++
 
 OBJCOPY = avr-objcopy
 OBJDUMP = avr-objdump
@@ -267,14 +295,15 @@ MSG_CLEANING = Cleaning project:
 
 
 # Define all object files.
-OBJ = $(SRC:.c=.o) $(ASRC:.S=.o) 
+OBJ = $(SRC:.c=.o) $(ASRC:.S=.o) $(CPPSRC:.cpp=.o)
 
 # Define all listing files.
-LST = $(ASRC:.S=.lst) $(SRC:.c=.lst)
+LST = $(ASRC:.S=.lst) $(SRC:.c=.lst) $(CPPSRC:.cpp=.lst)
 
 # Combine all necessary flags and optional flags.
 # Add target processor to flags.
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS)
+ALL_CPPFLAGS = -mmcu=$(MCU) -I. $(CPPFLAGS)
 ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
@@ -385,6 +414,12 @@ read:
 	$(CC) $(ALL_CFLAGS) $(OBJ) --output $@ $(LDFLAGS)
 
 
+# Compile: create object files from C++ source files
+%.o : %.cpp
+	@echo
+	@echo $(MSG_COMPILING) $<
+	$(CPP) -c $(ALL_CPPFLAGS) $< -o $@
+
 # Compile: create object files from C source files.
 %.o : %.c
 	@echo
@@ -452,5 +487,5 @@ clean_list :
 
 # Listing of phony targets.
 .PHONY : all begin finish end sizebefore sizeafter gccversion coff extcoff \
-	clean clean_list program
+	clean clean_list program read
 

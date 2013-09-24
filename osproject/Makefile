@@ -56,7 +56,8 @@ vending.c \
 rfid.c \
 network.c \
 logic.c \
-display.c
+display.c \
+DES.c
 
 # Compile and link Arduino libraries
 SRC += \

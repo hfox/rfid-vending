@@ -23,4 +23,8 @@
 client
 RFID-simple
 client-workaround
+keygen
+
+# Auto-generated source files
+deskey_auto_generated.c
 

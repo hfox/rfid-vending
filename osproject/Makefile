@@ -43,6 +43,15 @@ FORMAT = ihex
 # Target file name (without extension).
 TARGET = rfid-vending
 
+# DES key file. Generate a new key and temporarily change the Makefile
+# when building testing or production versions for the target environment. 
+#
+# To generate a completely new key, first change DESKEY in the Makefile.
+# Then, run "make replace-key". This will overwrite DESKEY. 
+#
+DESKEY=deskey.dev.bin
+
+
 # Optimization level, can be [0, 1, 2, 3, s]. 0 turns off optimization.
 # (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
 OPT = s
@@ -57,7 +66,8 @@ rfid.c \
 network.c \
 logic.c \
 display.c \
-DES.c
+DES.c \
+deskey_auto_generated.c
 
 # Compile and link Arduino libraries
 SRC += \
@@ -297,9 +307,22 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 # Default target.
-all: begin gccversion sizebefore $(TARGET).elf $(TARGET).hex $(TARGET).eep \
+all: utils keygen begin gccversion sizebefore $(TARGET).elf $(TARGET).hex $(TARGET).eep \
 	$(TARGET).lss $(TARGET).sym sizeafter finished end
 
+
+# Utils directory - tools to run during build
+utils:
+	make -C utils
+
+# Generate the C file with the DES key
+keygen:
+	./utils/keygen $(DESKEY)
+
+# Generate a completely new DES key. 
+# Replaces the key file currently in DESKEY.
+replace-key:
+	dd if=/dev/random of=$(DESKEY) bs=1 count=24
 
 # Eye candy.
 # AVR Studio 3.x does not check make's exit code but relies on
@@ -437,6 +460,7 @@ clean: begin clean_list finished end
 clean_list :
 	@echo
 	@echo $(MSG_CLEANING)
+	make -C utils clean
 	$(REMOVE) $(TARGET).hex
 	$(REMOVE) $(TARGET).eep
 	$(REMOVE) $(TARGET).obj
@@ -475,5 +499,5 @@ clean_list :
 
 # Listing of phony targets.
 .PHONY : all begin finish end sizebefore sizeafter gccversion coff extcoff \
-	clean clean_list program read
+	clean clean_list program read utils keygen replace-key
 

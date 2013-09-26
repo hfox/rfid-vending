@@ -1,11 +1,12 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -pedantic -ggdb
+WARNINGS=-Wall -Wextra -pedantic -Wno-unused-parameter
+CFLAGS=$(WARNINGS) -ggdb -fPIC
 LDFLAGS=-shared -lphidget21
 WORKAROUNDFLAGS=
-BINS=client RFID-simple client-workaround
+BINS=client client-workaround
 LIBFILES=/usr/local/lib/libphidget21.so
 
-all: client
+all: $(BINS)
 
 clean:
 	rm -f $(BINS) *.o

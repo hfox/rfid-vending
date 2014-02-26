@@ -6,6 +6,8 @@ WORKAROUNDFLAGS=
 BINS=client client-workaround
 LIBFILES=/usr/local/lib/libphidget21.so
 
+.PHONY: all clean
+
 all: $(BINS)
 
 clean:

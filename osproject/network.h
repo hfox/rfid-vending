@@ -4,6 +4,7 @@
 #define networkDENY		2
 
 void vListenToDatabaseServer(void *pvParameters );
+void network_init(void);
 
 void network_set_price(int price);
 void network_set_card(char *source);

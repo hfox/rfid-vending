@@ -19,6 +19,10 @@ void vListenToRfidReader(void *pvParameters)
 	}
 }
 
+void rfid_init(void)
+{
+}
+
 int rfid_has_card(void)
 {
 	return 0;

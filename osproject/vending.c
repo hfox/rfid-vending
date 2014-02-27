@@ -17,6 +17,10 @@ void vListenToVendingMachine(void *pvParameters)
 	}
 }
 
+void vending_init(void)
+{
+}
+
 void vending_set_accept(void)
 {
 }

@@ -5,6 +5,7 @@
 #define vendingSTATE_FAIL			3
 
 void vListenToVendingMachine(void *pvParameters );
+void vending_init(void);
 
 void vending_set_accept(void);
 void vending_set_deny(void);

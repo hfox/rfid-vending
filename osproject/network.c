@@ -20,6 +20,10 @@ void vListenToDatabaseServer(void *pvParameters)
 	}
 }
 
+void network_init(void)
+{
+}
+
 void network_set_price(int source)
 {
 	price = source;

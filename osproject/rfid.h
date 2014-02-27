@@ -1,6 +1,7 @@
 #define mainRFID_CHECK_PERIOD			( ( portTickType ) 10 / portTICK_RATE_MS  )
 
 void vListenToRfidReader(void *pvParameters );
+void rfid_init(void);
 
 int rfid_has_card(void);
 void rfid_reset_card(void);

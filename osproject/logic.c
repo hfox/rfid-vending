@@ -100,6 +100,10 @@ void vMainLogic(void *pvParameters)
 	}
 }
 
+void logic_init(void)
+{
+}
+
 char logic_running(void)
 {
 	static unsigned int saved_count = 0;

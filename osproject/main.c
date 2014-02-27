@@ -110,6 +110,13 @@ short main( void )
 
 	initWatchDog();
 
+	/* Run the init function in each module */
+	vending_init();
+	rfid_init();
+	network_init();
+	logic_init();
+	display_init();
+
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, ( signed char * ) "Check",
 		configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );

@@ -17,6 +17,10 @@ void vDisplay(void *pvParameters)
 	}
 }
 
+void display_init(void)
+{
+}
+
 void display_set_error(void)
 {
 }

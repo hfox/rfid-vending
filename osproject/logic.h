@@ -6,5 +6,6 @@
 #define logicSTATE_BUYING		4
 
 void vMainLogic(void *pvParameters );
+void logic_init(void);
 
 char logic_running(void);

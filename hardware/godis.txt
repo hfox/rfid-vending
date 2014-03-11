@@ -1,0 +1,26 @@
+Modellnummer
+-------------
+
+Myntmek:
+Detektor: NRI G-40.4000/5-0952
+Chassi: NRI G-46.4448/3-140
+Märkspänning: 24 VAC 50 Hz / 34 VDC
+
+Tillgänglig matning: 
+
+
+Myntmek
+---------
+Kablar ut från moderkortet:
+Från vänster:
+Port på moderkort <-> 3x3 (4 kab, 1+2+3+4) och 3x5 (3 kab, 1+2+9) MATE-N-LOK
+Port på moderkort tom
+Port på moderkort <-> 2x3 (5 kab, 1+2+4+5+6)
+
+Kablar i maskinen till meken:
+Från huvudkort:
+3x3 (5 kab, 1+2+3+4+9)
+
+Från nätdel:
+3x5 (2 kab, 1+2) Kablarna har samma färg, AC
+

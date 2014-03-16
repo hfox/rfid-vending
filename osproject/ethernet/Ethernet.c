@@ -42,39 +42,40 @@ int Ethernet_begin_1(EthernetClass * this, uint8_t *mac_address)
 #endif /* HAS_DHCP */
 
 #ifdef HAS_UNNECESSARY_ETHERNET_BEGIN
-void Ethernet_begin_2(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip)
+void Ethernet_begin_2(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip)
 {
   // Assume the DNS server will be the machine on the same network as the local IP
   // but with last octet being '1'
-  IPAddress dns_server = local_ip;
+  IPAddress dns_server = *local_ip;
   dns_server[3] = 1;
-  Ethernet_begin_3(this, mac_address, local_ip, dns_server);
+  Ethernet_begin_3(this, mac_address, local_ip, &dns_server);
 }
 
-void Ethernet_begin_3(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server)
+void Ethernet_begin_3(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip, IPAddress *dns_server)
 {
   // Assume the gateway will be the machine on the same network as the local IP
   // but with last octet being '1'
-  IPAddress gateway = local_ip;
+  IPAddress gateway = *local_ip;
   gateway[3] = 1;
-  Ethernet_begin_4(this, mac_address, local_ip, dns_server, gateway);
+  Ethernet_begin_4(this, mac_address, local_ip, dns_server, &gateway);
 }
 
-void Ethernet_begin_4(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway)
+void Ethernet_begin_4(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip, IPAddress *dns_server, IPAddress *gateway)
 {
-  IPAddress subnet(255, 255, 255, 0);
-  Ethernet_begin_5(this, mac_address, local_ip, dns_server, gateway, subnet);
+  IPAddress subnet;
+  construct_IPAddress_4(&subnet, 255, 255, 255, 0);
+  Ethernet_begin_5(this, mac_address, local_ip, dns_server, gateway, &subnet);
 }
 #endif /* HAS_UNNECESSARY_ETHERNET_BEGIN */
 
-void Ethernet_begin_5(EthernetClass * this, uint8_t *mac, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet)
+void Ethernet_begin_5(EthernetClass * this, uint8_t *mac, IPAddress *local_ip, IPAddress *dns_server, IPAddress *gateway, IPAddress *subnet)
 {
   W5100_init(&W5100);
   W5100_setMACAddress(mac);
-  W5100_setIPAddress(local_ip._address);
-  W5100_setGatewayIp(gateway._address);
-  W5100_setSubnetMask(subnet._address);
-  this->_dnsServerAddress = dns_server;
+  W5100_setIPAddress(local_ip->_address);
+  W5100_setGatewayIp(gateway->_address);
+  W5100_setSubnetMask(subnet->_address);
+  this->_dnsServerAddress = *dns_server;
 }
 
 #ifdef HAS_DHCP

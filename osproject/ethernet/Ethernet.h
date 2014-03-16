@@ -40,12 +40,12 @@ typedef struct EthernetClass {
 #endif /* HAS_DHCP */
 
 #ifdef HAS_UNNECESSARY_ETHERNET_BEGIN
-  void Ethernet_begin_2(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip);
-  void Ethernet_begin_3(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server);
-  void Ethernet_begin_4(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
+  void Ethernet_begin_2(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip);
+  void Ethernet_begin_3(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip, IPAddress *dns_server);
+  void Ethernet_begin_4(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip, IPAddress *dns_server, IPAddress *gateway);
 #endif /* HAS_UNNECESSARY_ETHERNET_BEGIN */
 
-  void Ethernet_begin_5(EthernetClass * this, uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
+  void Ethernet_begin_5(EthernetClass * this, uint8_t *mac_address, IPAddress *local_ip, IPAddress *dns_server, IPAddress *gateway, IPAddress *subnet);
 
 #ifdef HAS_DHCP
   int Ethernet_maintain(EthernetClass * this);

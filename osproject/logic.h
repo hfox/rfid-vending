@@ -5,7 +5,7 @@
 #define logicSTATE_CHECKING		3
 #define logicSTATE_BUYING		4
 
-void vMainLogic(void *pvParameters );
+void logic_run(void *pvParameters );
 void logic_init(void);
 
 char logic_running(void);

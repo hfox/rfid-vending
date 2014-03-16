@@ -3,7 +3,7 @@
 #define networkACCEPT		1
 #define networkDENY		2
 
-void vListenToDatabaseServer(void *pvParameters );
+void network_run(void *pvParameters );
 void network_init(void);
 
 void network_set_price(int price);

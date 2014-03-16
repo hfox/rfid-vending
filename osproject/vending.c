@@ -6,7 +6,7 @@
 
 static unsigned int count = 0;
 
-void vListenToVendingMachine(void *pvParameters)
+void vending_run(void *pvParameters)
 {
 	/* The parameters are not used. */
 	(void) pvParameters;

@@ -66,6 +66,7 @@ rfid.c \
 network.c \
 logic.c \
 display.c \
+test.c \
 DES.c \
 deskey_auto_generated.c
 

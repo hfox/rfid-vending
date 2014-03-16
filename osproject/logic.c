@@ -19,7 +19,7 @@ static int vending_state;
 static int state = logicSTATE_IDLE;
 static int next = logicSTATE_IDLE;
 
-void vMainLogic(void *pvParameters)
+void logic_run(void *pvParameters)
 {
 	/* The parameters are not used. */
 	(void) pvParameters;

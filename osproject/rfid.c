@@ -8,7 +8,7 @@ static unsigned int count = 0;
 
 static char card[20];
 
-void vListenToRfidReader(void *pvParameters)
+void rfid_run(void *pvParameters)
 {
 	/* The parameters are not used. */
 	(void) pvParameters;

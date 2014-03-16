@@ -39,6 +39,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <avr/wdt.h>
+#include <Arduino.h>
 
 #ifdef GCC_MEGA_AVR
 	/* EEPROM routines used only with the WinAVR compiler. */
@@ -56,6 +57,7 @@
 #include "network.h"
 #include "logic.h"
 #include "display.h"
+#include "test.h"
 
 /* Priority definitions for most of the tasks in the demo application.  Some
 tasks just use the idle priority. */
@@ -65,6 +67,7 @@ tasks just use the idle priority. */
 #define mainDATABASE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainVENDING_MACHINE_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
+#define mainTEST_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
 
 /* The period between executions of the check task. */
 #define mainCHECK_PERIOD				( ( portTickType ) 1000 / portTICK_RATE_MS  )
@@ -116,20 +119,23 @@ short main( void )
 	network_init();
 	logic_init();
 	display_init();
+	test_init();
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, ( signed char * ) "Check",
 		configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-	xTaskCreate( vListenToVendingMachine, ( signed char * ) "Listen to vending machine",
+	xTaskCreate( vending_run, ( signed char * ) "Listen to vending machine",
 		configMINIMAL_STACK_SIZE, NULL, mainVENDING_MACHINE_TASK_PRIORITY, NULL );
-	xTaskCreate( vListenToRfidReader, ( signed char * ) "Listen to RFID reader",
+	xTaskCreate( rfid_run, ( signed char * ) "Listen to RFID reader",
 		configMINIMAL_STACK_SIZE, NULL, mainRFID_TASK_PRIORITY, NULL );
-	xTaskCreate( vListenToDatabaseServer, ( signed char * ) "Listen to database server",
+	xTaskCreate( network_run, ( signed char * ) "Listen to database server",
 		configMINIMAL_STACK_SIZE, NULL, mainDATABASE_TASK_PRIORITY, NULL );
-	xTaskCreate( vMainLogic, ( signed char * ) "Main logic",
+	xTaskCreate( logic_run, ( signed char * ) "Main logic",
 		configMINIMAL_STACK_SIZE, NULL, mainMAIN_LOGIC_TASK_PRIORITY, NULL );
-	xTaskCreate( vDisplay, ( signed char * ) "Display",
+	xTaskCreate( display_run, ( signed char * ) "Display",
 		configMINIMAL_STACK_SIZE, NULL, mainDISPLAY_TASK_PRIORITY, NULL );
+	xTaskCreate( test_run, ( signed char * ) "Run test code",
+		configMINIMAL_STACK_SIZE, NULL, mainTEST_TASK_PRIORITY, NULL );
 
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION 
 	as 1 in portmacro.h.  To use the cooperative scheduler define 
@@ -143,7 +149,8 @@ short main( void )
 static void vErrorChecks( void *pvParameters )
 {
 	static volatile unsigned long ulDummyVariable = 3UL;
-
+	static int toggle = 0;
+	
 	/* The parameters are not used. */
 	( void ) pvParameters;
 
@@ -168,7 +175,9 @@ static void vErrorChecks( void *pvParameters )
 	for ( ;; )
 	{
 		vTaskDelay(mainERROR_PERIOD);
-		led_toggle();
+		//led_toggle();
+		toggle = !toggle;
+		digitalWrite(3, toggle);
 
 #if configHANG_ON_ERROR != 0
 		wdt_reset();
@@ -180,6 +189,8 @@ static void vErrorChecks( void *pvParameters )
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
+	static int toggle = 0;
+	
 	if (! display_running())
 		xErrorHasOccurred = pdTRUE;
 	if (! logic_running())
@@ -190,12 +201,16 @@ static void prvCheckOtherTasksAreStillRunning( void )
 		xErrorHasOccurred = pdTRUE;
 	if (! vending_running())
 		xErrorHasOccurred = pdTRUE;
+	if (! test_running())
+		xErrorHasOccurred = pdTRUE;
 
 	if( xErrorHasOccurred == pdFALSE )
 	{
 		// Toggle the LED if everything is okay so we know if an error occurs
-		led_toggle();
-
+		//led_toggle();
+ 		toggle = !toggle;
+		digitalWrite(3, toggle);
+		
 		// Reset the watchdog timer
 		wdt_reset();
 	}

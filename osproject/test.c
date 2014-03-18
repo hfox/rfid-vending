@@ -10,30 +10,22 @@ static unsigned int count = 0;
 static unsigned int toggle = 0;
 static unsigned int recv = 0;
 
-// static char rxbuf[100];
-// static char txbuf[100];
+static int crashed = 0;
 
-static ring_buffer _rxbuf, *rxbuf = &_rxbuf;
-static ring_buffer _txbuf, *txbuf = &_txbuf;
-
-static HardwareSerial _hwserial;
-static HardwareSerial *hwserial = &_hwserial;
-
-#define regvar(name,val) static uint8_t _ ## name = val, *name = & _ ## name ;
-
-regvar(ubrrh,0)
-regvar(ubrrl,0)
-regvar(ucsra,0)
-regvar(ucsrb,0)
-regvar(ucsrc,0)
-regvar(udr,0)
+void send_string(char *str)
+{
+	char *p = str, c;
+	while ((c = *p++)) {
+		HardwareSerial_write(&Serial, c);
+	}
+}
 
 void test_run(void *pvParameters)
 {
 	/* The parameters are not used. */
 	(void) pvParameters;
 
-	for(;;) {
+	for(; crashed == 0;) {
 		vTaskDelay( mainTEST_CHECK_PERIOD );
 		count++;
 
@@ -41,7 +33,10 @@ void test_run(void *pvParameters)
 		recv = digitalRead(2);
 		//digitalWrite(3, toggle);
 		//digitalWrite(3, recv);
+		
+		send_string("Hej hej. \n");
 	}
+	for(;;) {} // Trap
 }
 
 void test_init(void)
@@ -50,11 +45,8 @@ void test_init(void)
 	pinMode(2, INPUT);
 	pinMode(3, OUTPUT);
 
-	
-	construct_HardwareSerial(hwserial, rxbuf, txbuf,
-		ubrrh, ubrrl, ucsra, ucsrb, ucsrc, udr,
-		0, 0, 0, 0, 0);
-		
+	HardwareSerial_global_init();
+	HardwareSerial_begin_1(&Serial, 9600);
 }
 
 char test_running(void)

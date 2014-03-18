@@ -139,6 +139,8 @@ typedef struct HardwareSerial
   extern HardwareSerial Serial3;
 #endif
 
+extern void HardwareSerial_global_init(void);
+
 extern void serialEventRun(void) __attribute__((weak));
 
 #undef virtual

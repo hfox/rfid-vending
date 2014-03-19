@@ -6,6 +6,22 @@
 #include "HardwareSerial.h"
 #include "test.h"
 
+#if defined(UBRRH)
+ #warning "HwSerial: Serial using USART"
+#endif
+#if defined(UBRR0H)
+ #warning "HwSerial: Serial using USART0"
+#endif
+#if defined(UBRR1H)
+ #warning "HwSerial: Serial1 using USART1"
+#endif
+#if defined(UBRR1H)
+ #warning "HwSerial: Serial2 using USART2"
+#endif
+#if defined(UBRR1H)
+ #warning "HwSerial: Serial3 using USART3"
+#endif
+
 static unsigned int count = 0;
 static unsigned int toggle = 0;
 static unsigned int recv = 0;

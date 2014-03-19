@@ -149,7 +149,6 @@ short main( void )
 static void vErrorChecks( void *pvParameters )
 {
 	static volatile unsigned long ulDummyVariable = 3UL;
-	static int toggle = 0;
 	
 	/* The parameters are not used. */
 	( void ) pvParameters;
@@ -175,9 +174,7 @@ static void vErrorChecks( void *pvParameters )
 	for ( ;; )
 	{
 		vTaskDelay(mainERROR_PERIOD);
-		//led_toggle();
-		toggle = !toggle;
-		digitalWrite(3, toggle);
+		led_toggle();
 
 #if configHANG_ON_ERROR != 0
 		wdt_reset();
@@ -189,8 +186,6 @@ static void vErrorChecks( void *pvParameters )
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
-	static int toggle = 0;
-	
 	if (! display_running())
 		xErrorHasOccurred = pdTRUE;
 	if (! logic_running())
@@ -207,9 +202,7 @@ static void prvCheckOtherTasksAreStillRunning( void )
 	if( xErrorHasOccurred == pdFALSE )
 	{
 		// Toggle the LED if everything is okay so we know if an error occurs
-		//led_toggle();
- 		toggle = !toggle;
-		digitalWrite(3, toggle);
+		led_toggle();
 		
 		// Reset the watchdog timer
 		wdt_reset();
@@ -256,11 +249,16 @@ void vApplicationIdleHook( void )
 
 void led_init(void)
 {
-	DDRB |= 1 << PB5;
+//	DDRB |= 1 << PB5;
+	pinMode(3, OUTPUT);
 }
 
 void led_toggle(void)
 {
-	PORTB ^= 1 << PB5;
+	static int toggle = 0;
+
+//	PORTB ^= 1 << PB5;
+	toggle = !toggle;
+	digitalWrite(3, toggle);
 }
 

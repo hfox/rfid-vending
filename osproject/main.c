@@ -51,6 +51,9 @@
 #include "task.h"
 #include "croutine.h"
 
+/* Project libraries */
+#include "serial.h"
+
 /* Project components */
 #include "vending.h"
 #include "rfid.h"
@@ -175,6 +178,7 @@ static void vErrorChecks( void *pvParameters )
 	{
 		vTaskDelay(mainERROR_PERIOD);
 		led_toggle();
+		SERIAL_SEND_ARRAY("Some tasks have crashed\n");
 
 #if configHANG_ON_ERROR != 0
 		wdt_reset();
@@ -203,6 +207,7 @@ static void prvCheckOtherTasksAreStillRunning( void )
 	{
 		// Toggle the LED if everything is okay so we know if an error occurs
 		led_toggle();
+		SERIAL_SEND_ARRAY("Running ok\n");
 		
 		// Reset the watchdog timer
 		wdt_reset();

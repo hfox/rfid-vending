@@ -5,6 +5,7 @@
 
 #include "HardwareSerial.h"
 #include "test.h"
+#include "serial.h"
 
 #if defined(UBRRH)
  #warning "HwSerial: Serial using USART"
@@ -22,19 +23,15 @@
  #warning "HwSerial: Serial3 using USART3"
 #endif
 
+// Used for test code in this file, not for USART
+#define RXPIN 0
+#define TXPIN 1
+
 static unsigned int count = 0;
 static unsigned int toggle = 0;
 static unsigned int recv = 0;
 
 static int crashed = 0;
-
-void send_string(char *str)
-{
-	char *p = str, c;
-	while ((c = *p++)) {
-		HardwareSerial_write(&Serial, c);
-	}
-}
 
 void test_run(void *pvParameters)
 {
@@ -46,11 +43,11 @@ void test_run(void *pvParameters)
 		count++;
 
 		toggle = !toggle;
-		recv = digitalRead(2);
-		//digitalWrite(3, toggle);
-		//digitalWrite(3, recv);
+	//	recv = digitalRead(RXPIN);
+	//	digitalWrite(TXPIN, toggle);
+	//	digitalWrite(TXPIN, recv);
 		
-		send_string("Hej hej. \n");
+		serial_send_string("Hej hej. \n");
 	}
 	for(;;) {} // Trap
 }
@@ -58,11 +55,11 @@ void test_run(void *pvParameters)
 void test_init(void)
 {
 	// Test send init
-	pinMode(2, INPUT);
-	pinMode(3, OUTPUT);
+	pinMode(RXPIN, INPUT);
+	pinMode(TXPIN, OUTPUT);
 
-	HardwareSerial_global_init();
-	HardwareSerial_begin_1(&Serial, 9600);
+	serial_init();
+
 }
 
 char test_running(void)

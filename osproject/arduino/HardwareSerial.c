@@ -91,6 +91,50 @@ inline void store_char(unsigned char c, ring_buffer *buffer)
   }
 }
 
+int HardwareSerial_get_tx_buffer_usage(HardwareSerial *this)
+{
+	ring_buffer *buf = this->_tx_buffer;
+	return ((SERIAL_BUFFER_SIZE + buf->head - buf->tail) % SERIAL_BUFFER_SIZE);
+}
+
+int HardwareSerial_get_tx_buffer_free(HardwareSerial *this)
+{
+	ring_buffer *buf = this->_tx_buffer;
+	return ((SERIAL_BUFFER_SIZE + buf->tail - buf->head) % SERIAL_BUFFER_SIZE);
+}
+
+int HardwareSerial_get_rx_buffer_usage(HardwareSerial *this)
+{
+	ring_buffer *buf = this->_rx_buffer;
+	return ((SERIAL_BUFFER_SIZE + buf->head - buf->tail) % SERIAL_BUFFER_SIZE);
+}
+
+int HardwareSerial_get_rx_buffer_free(HardwareSerial *this)
+{
+	ring_buffer *buf = this->_rx_buffer;
+	return ((SERIAL_BUFFER_SIZE + buf->tail - buf->head) % SERIAL_BUFFER_SIZE);
+}
+
+int HardwareSerial_get_tx_head(HardwareSerial *this)
+{
+	return this->_tx_buffer->head;
+}
+
+int HardwareSerial_get_tx_tail(HardwareSerial *this)
+{
+	return this->_tx_buffer->tail;
+}
+
+int HardwareSerial_get_rx_head(HardwareSerial *this)
+{
+	return this->_rx_buffer->head;
+}
+
+int HardwareSerial_get_rx_tail(HardwareSerial *this)
+{
+	return this->_rx_buffer->tail;
+}
+
 #if !defined(USART0_RX_vect) && defined(USART1_RX_vect)
 // do nothing - on the 32u4 the first USART is USART1
 #else
@@ -466,6 +510,32 @@ size_t HardwareSerial_write(HardwareSerial * this, uint8_t c)
   this->transmitting = true;
   sbi(*(this->_ucsra), TXC0);
   
+  return 1;
+}
+
+size_t HardwareSerial_buffer(HardwareSerial *this, uint8_t c)
+{
+  int i = (this->_tx_buffer->head + 1) % SERIAL_BUFFER_SIZE;
+	
+  // If the output buffer is full, there's nothing for it other than to 
+  // wait for the interrupt handler to empty it a bit
+  // ???: return 0 here instead?
+  while (i == this->_tx_buffer->tail)
+    ;
+	
+  this->_tx_buffer->buffer[this->_tx_buffer->head] = c;
+  this->_tx_buffer->head = i;
+
+  return 1;
+}
+
+size_t HardwareSerial_write_buffer(HardwareSerial *this)
+{
+  sbi(*(this->_ucsrb), this->_udrie);
+  // clear the TXC bit -- "can be cleared by writing a one to its bit location"
+  this->transmitting = true;
+  sbi(*(this->_ucsra), TXC0);
+
   return 1;
 }
 

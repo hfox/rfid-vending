@@ -87,6 +87,8 @@ typedef struct HardwareSerial
     virtual int HardwareSerial_read(HardwareSerial * this);
     virtual void HardwareSerial_flush(HardwareSerial * this);
     virtual size_t HardwareSerial_write(HardwareSerial * this, uint8_t c);
+    size_t HardwareSerial_buffer(HardwareSerial * this, uint8_t c);
+    size_t HardwareSerial_write_buffer(HardwareSerial * this);
 //    inline size_t HardwareSerial_write(HardwareSerial * this, unsigned long n)
 //        { return HardwareSerial_write(this, (uint8_t)n); }
 //    inline size_t HardwareSerial_write(HardwareSerial * this, long n)
@@ -140,6 +142,16 @@ typedef struct HardwareSerial
 #endif
 
 extern void HardwareSerial_global_init(void);
+
+extern int HardwareSerial_get_tx_buffer_usage(HardwareSerial *this);
+extern int HardwareSerial_get_tx_buffer_free(HardwareSerial *this);
+extern int HardwareSerial_get_rx_buffer_usage(HardwareSerial *this);
+extern int HardwareSerial_get_rx_buffer_free(HardwareSerial *this);
+
+extern int HardwareSerial_get_tx_head(HardwareSerial *this);
+extern int HardwareSerial_get_tx_tail(HardwareSerial *this);
+extern int HardwareSerial_get_rx_head(HardwareSerial *this);
+extern int HardwareSerial_get_rx_tail(HardwareSerial *this);
 
 extern void serialEventRun(void) __attribute__((weak));
 

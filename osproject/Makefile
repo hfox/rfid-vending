@@ -70,6 +70,7 @@ test.c \
 DES.c \
 ethernet.c \
 serial.c \
+parallel.c \
 deskey_auto_generated.c
 
 # Compile and link Arduino libraries

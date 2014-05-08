@@ -129,15 +129,45 @@ int main( void )
 	/* Run various low-level init functions */
 	prvIncrementResetCount();
 
+	init_timer();
+	init_usart();
+	parallel_init();
+	parallel_send_byte(0x01);
+	
+	/* Enable interrupts, for timer0 and delay.
+	 * Needed for initialization of EthernetShield.
+	 */
+	sei();
+	
+	delay(1000);
+	parallel_send_byte(0x0f);
+	delay(1000);
+	parallel_send_byte(0x00);
+	delay(1000);
+	parallel_send_byte(0x0f);
+	
+	serial_init();
+	ethernet_init();
+	parallel_send_byte(0x02);
+	
 	init_watchdog();
+	parallel_send_byte(0x03);
 
 	/* Run the init function in each module */
 	vending_init();
 	rfid_init();
 	network_init();
 	logic_init();
+
+	parallel_send_byte(0x04);
+	network_init();
+	
+	parallel_send_byte(0x05);
 	display_init();
 	test_init();
+
+	parallel_send_byte(0x06);
+	serial_send_string("Init done\n");
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, ( signed char * ) "Check",
@@ -154,6 +184,9 @@ int main( void )
 		configMINIMAL_STACK_SIZE, NULL, mainDISPLAY_TASK_PRIORITY, NULL );
 	xTaskCreate( test_run, ( signed char * ) "Run test code",
 		configMINIMAL_STACK_SIZE, NULL, mainTEST_TASK_PRIORITY, NULL );
+
+	parallel_send_byte(0x07);
+	serial_send_string("Tasks created\n");
 
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION 
 	as 1 in portmacro.h.  To use the cooperative scheduler define 
@@ -208,7 +241,7 @@ static void vErrorChecks( void *pvParameters )
 	{
 		vTaskDelay(mainERROR_PERIOD);
 		toggle_led();
-		SERIAL_SEND_ARRAY("Some tasks have crashed\n");
+		serial_send_string("Error\n");
 
 #if configHANG_ON_ERROR != 0
 		wdt_reset();
@@ -237,7 +270,7 @@ static void prvCheckOtherTasksAreStillRunning( void )
 	{
 		// Toggle the LED if everything is okay so we know if an error occurs
 		toggle_led();
-		SERIAL_SEND_ARRAY("Running ok\n");
+		serial_send_string("Running ok\n");
 		
 		// Reset the watchdog timer
 		wdt_reset();

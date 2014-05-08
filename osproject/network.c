@@ -42,7 +42,7 @@ void network_init(void)
 {
 	int status = 0;
 	
-	status = ethernet_init();
+// 	status = ethernet_init();
 	
 // 	if (status == 0)
 // 		crash = 1;

@@ -77,7 +77,7 @@ int EthernetClient_connect_ip(EthernetClient * this, IPAddress * ip, uint16_t po
   }
 
   while (EthernetClient_status(this) != SnSR_ESTABLISHED) {
-    //delay(1);
+    delay(1);
     if (EthernetClient_status(this) == SnSR_CLOSED) {
       this->_sock = MAX_SOCK_NUM;
       return 0;

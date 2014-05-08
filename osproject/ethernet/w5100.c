@@ -121,7 +121,7 @@ W5100Class W5100;
 
 void W5100_init(W5100Class * this)
 {
-//  delay(300);
+  delay(300);
 
   SPI_begin();
   W5100_initSS();

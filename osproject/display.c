@@ -3,6 +3,7 @@
 #include "task.h"
 
 #include "display.h"
+#include "serial.h"
 
 static unsigned int count = 0;
 
@@ -14,6 +15,7 @@ void display_run(void *pvParameters)
 	for(;;) {
 		vTaskDelay( mainDISPLAY_PERIOD );
 		count++;
+		serial_send_string("Display\n");
 	}
 }
 

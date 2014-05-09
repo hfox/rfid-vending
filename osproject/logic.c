@@ -8,6 +8,7 @@
 #include "rfid.h"
 #include "network.h"
 #include "display.h"
+#include "serial.h"
 
 static unsigned int count = 0;
 
@@ -27,6 +28,8 @@ void logic_run(void *pvParameters)
 	for(;;) {
 		vTaskDelay( mainMAIN_LOGIC_CHECK_PERIOD );
 		count++;
+
+		serial_send_string("Logic\n");
 
 		switch (state) {
 			case logicSTATE_IDLE:

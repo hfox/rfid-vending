@@ -1,4 +1,4 @@
-#define mainDATABASE_CHECK_PERIOD		( ( portTickType ) 100 / portTICK_RATE_MS  )
+#define mainNETWORK_CHECK_PERIOD		( ( portTickType ) 100 / portTICK_RATE_MS  )
 
 #define networkACCEPT		1
 #define networkDENY		2

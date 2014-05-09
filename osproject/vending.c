@@ -3,6 +3,7 @@
 #include "task.h"
 
 #include "vending.h"
+#include "serial.h"
 
 static unsigned int count = 0;
 
@@ -14,6 +15,7 @@ void vending_run(void *pvParameters)
 	for(;;) {
 		vTaskDelay( mainVENDING_CHECK_PERIOD );
 		count++;
+		serial_send_string("Vending\n");
 	}
 }
 

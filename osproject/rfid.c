@@ -3,6 +3,7 @@
 #include "task.h"
 
 #include "rfid.h"
+#include "serial.h"
 
 static unsigned int count = 0;
 
@@ -16,6 +17,7 @@ void rfid_run(void *pvParameters)
 	for(;;) {
 		vTaskDelay( mainRFID_CHECK_PERIOD );
 		count++;
+		serial_send_string("RFID\n");
 	}
 }
 

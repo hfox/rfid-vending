@@ -7,6 +7,8 @@
 #include "IPAddress.h"
 #include "network.h"
 #include "ethernet.h"
+#include "serial.h"
+#include "parallel.h"
 
 static unsigned int count = 0;
 
@@ -27,26 +29,21 @@ void network_run (void *pvParameters)
 		len = strlen(text);
 	
 	for(; crash == 0;) {
-		vTaskDelay( mainDATABASE_CHECK_PERIOD );
+		vTaskDelay( mainNETWORK_CHECK_PERIOD );
 		count++;
 		
-		//EthernetClient_write_2(ethclient, text, len);
 		status = ETHERNET_SEND_ARRAY("abcdefghijklmn");
-// 		if (status == 0)
-// 			crash = 1;
+		serial_send_string("Network\n");
+		if (status == 0)
+			serial_send_string("Eth send fail\n");
+		else
+			serial_send_string("Eth send ok\n");
 	}
 	for(;;){} // Trap
 }
 
 void network_init(void)
 {
-	int status = 0;
-	
-// 	status = ethernet_init();
-	
-// 	if (status == 0)
-// 		crash = 1;
-
 }
 
 void network_set_price(int source)

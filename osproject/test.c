@@ -47,7 +47,8 @@ void test_run(void *pvParameters)
 	//	digitalWrite(TXPIN, toggle);
 	//	digitalWrite(TXPIN, recv);
 		
-		serial_send_string("Hej hej. \n");
+		serial_send_string("Test\n");
+		serial_send_buffer();
 	}
 	for(;;) {} // Trap
 }

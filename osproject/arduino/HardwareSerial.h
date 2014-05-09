@@ -40,7 +40,7 @@
 #if (RAMEND < 1000)
   #define SERIAL_BUFFER_SIZE 16
 #else
-  #define SERIAL_BUFFER_SIZE 64
+  #define SERIAL_BUFFER_SIZE 128
 #endif
 
 struct ring_buffer

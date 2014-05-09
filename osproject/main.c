@@ -131,6 +131,7 @@ int main( void )
 
 	init_timer();
 	init_usart();
+	init_led();
 	parallel_init();
 	parallel_send_byte(0x01);
 	
@@ -218,9 +219,6 @@ static void vErrorChecks( void *pvParameters )
 	
 	/* The parameters are not used. */
 	( void ) pvParameters;
-
-	// Initialize LED
-	init_led();
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */

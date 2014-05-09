@@ -10,7 +10,7 @@
 void serial_send_byte(int c)
 {
 	taskENTER_CRITICAL();
-	HardwareSerial_write(&Serial, c);
+	HardwareSerial_buffer(&Serial, c);
 	taskEXIT_CRITICAL();
 }
 
@@ -19,7 +19,7 @@ void serial_send_bytes(char *ptr, int len)
 	char *c = ptr;
 	taskENTER_CRITICAL();
 	for (int i = 0; i < len; ++i) {
-		HardwareSerial_write(&Serial, *c);
+		HardwareSerial_buffer(&Serial, *c);
 		++c;
 	}
 	taskEXIT_CRITICAL();
@@ -30,7 +30,7 @@ void serial_send_string(char *str)
 	char *p = str, c;
 	taskENTER_CRITICAL();
 	while ((c = *p++)) {
-		HardwareSerial_write(&Serial, c);
+		HardwareSerial_buffer(&Serial, c);
 	}
 	taskEXIT_CRITICAL();
 }

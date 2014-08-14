@@ -192,8 +192,11 @@ int main( void )
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION 
 	as 1 in portmacro.h.  To use the cooperative scheduler define 
 	configUSE_PREEMPTION as 0. */
-	vTaskStartScheduler();
+// 	vTaskStartScheduler();
 
+	for(;;)
+		main_loop();
+	
 	return 0;
 }
 /*-----------------------------------------------------------*/
@@ -204,6 +207,7 @@ static void main_loop(void)
 	
 	led_state = (led_state + 1) % 16;
 	parallel_send_byte(led_state);
+	toggle_led();
 	wdt_reset();
 	
 // 	vTaskDelay(mainCHECK_PERIOD);
@@ -211,6 +215,12 @@ static void main_loop(void)
 	
 	serial_send_string("Test. Alternative main loop\n");
 	
+	display_step();
+	logic_step();
+	network_step();
+	rfid_step();
+	test_step();
+	vending_step();
 }
 
 static void vErrorChecks( void *pvParameters )

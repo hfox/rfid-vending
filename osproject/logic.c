@@ -103,6 +103,11 @@ void logic_run(void *pvParameters)
 	}
 }
 
+void logic_step(void)
+{
+	serial_send_string("Logic\n");
+}
+
 void logic_init(void)
 {
 }

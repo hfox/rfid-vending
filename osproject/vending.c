@@ -19,6 +19,11 @@ void vending_run(void *pvParameters)
 	}
 }
 
+void vending_step(void)
+{
+	serial_send_string("Vending\n");
+}
+
 void vending_init(void)
 {
 }

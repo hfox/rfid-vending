@@ -53,6 +53,11 @@ void test_run(void *pvParameters)
 	for(;;) {} // Trap
 }
 
+void test_step(void)
+{
+	serial_send_string("Test\n");
+}
+
 void test_init(void)
 {
 	// Test send init

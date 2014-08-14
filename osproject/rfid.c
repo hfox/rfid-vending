@@ -21,6 +21,11 @@ void rfid_run(void *pvParameters)
 	}
 }
 
+void rfid_step(void)
+{
+	serial_send_string("RFID\n");
+}
+
 void rfid_init(void)
 {
 }

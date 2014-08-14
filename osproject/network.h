@@ -4,6 +4,7 @@
 #define networkDENY		2
 
 void network_run(void *pvParameters );
+void network_step(void);
 void network_init(void);
 
 void network_set_price(int price);

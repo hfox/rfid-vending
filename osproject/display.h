@@ -1,6 +1,7 @@
 #define mainDISPLAY_PERIOD		( ( portTickType ) 100 / portTICK_RATE_MS  )
 
 void display_run(void *pvParameters );
+void display_step(void);
 void display_init(void);
 
 void display_set_error(void);

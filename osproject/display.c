@@ -19,6 +19,11 @@ void display_run(void *pvParameters)
 	}
 }
 
+void display_step(void)
+{
+	serial_send_string("Display\n");
+}
+
 void display_init(void)
 {
 }

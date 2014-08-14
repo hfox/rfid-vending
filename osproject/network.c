@@ -42,6 +42,11 @@ void network_run (void *pvParameters)
 	for(;;){} // Trap
 }
 
+void network_step(void)
+{
+	serial_send_string("Network\n");
+}
+
 void network_init(void)
 {
 }

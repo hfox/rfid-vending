@@ -68,7 +68,7 @@ char hexDigitToChar(int hexDigit)
 
 void setup() {
   // Open serial communications and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(9600, SERIAL_8N1);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
@@ -103,7 +103,8 @@ void loop()
 
   // if there are incoming bytes available
   // from the server, read them and print them:
-  if (Serial.available()) {
+  int done = 0;
+  while (Serial.available()) {
     char c = Serial.read();
     
      int hexDigit;
@@ -123,8 +124,9 @@ void loop()
      Serial.println(message);
      sendUdpPacket(message);
      
-     
-  } else {
+     done = 1;
+  }
+  if (!done) {
      message = "Could not read from serial";
      
      Serial.println(message);

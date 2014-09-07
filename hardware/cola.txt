@@ -9,6 +9,47 @@ Tillgänglig matning: 110 VAC
 
 Myntmek
 ---------
-Kablar:
+Kablar ut från moderkortet:
+
+PSU-kort:
+Från vänster:
+
+CPU-kort:
+Uppifrån:
+
+12x1 (12 kab) -> 3x4 (12 kab) -> display på front
+9x1 (6 kab) -> DB9 (6 kab) -> betalsystem
+
+
+Betalsystem-koppling:
+
+Kontakt på moderkortet:
+Pin, uppifrån	Kabelfärg	Intern funktion
+1		Grön		GND?
+2		NC		NC
+3		Brun		-> pin 8. Pol i RX/TX-loop?
+4		Vit (orange)	Kopplad via R till buss delad med 5. Strömförsörjning?
+
+5		NC		Kopplad via C till buss delad med 4. Strömförsörjning?
+6		Grå		Pol i RX/TX-loop?
+7		Rosa		Pol i RX/TX-loop?
+8		Gul		-> pin 3. Pol i RX/TX-loop?
+
+9		NC		NC
+
+DB9-kontakt (hona):
+Pin, hane fr v	DB9-stift	Kabelfärg
+1		CD		Grön
+2		RX		Brun
+3		TX		Gul
+4		DTR		Rosa
+
+5		GND		NC
+6		DSR		Orange (vit)
+7		RTS		-> pin 1
+8		CTS		NC
+
+9		RI		Grå
+
 
 

@@ -38,17 +38,61 @@ IPAddress ip(192, 168, 1, 55);
 EthernetClient client;
 EthernetUDP udp;
 
+enum SERIAL_MODE {
+  SERIAL_DEBUG = 0,
+  SERIAL_MEK = 1
+};
+
+enum REPLY_CODE {
+  REPLY_PNAK = 0xFF
+};
+
+int serialMode = SERIAL_MEK;
+int serialVariant = SERIAL_8E1;
+
 void sendUdpPacket(char *buf)
 {
-    Serial.println("begin packet");
     udp.beginPacket(server, udpServerPort);
-    
-    Serial.println("udp write...");
     udp.write(buf, strlen(buf));
-    
-    Serial.println("end packet");
     udp.endPacket();
-    
+}
+
+void sendSerialPacket(char *buf)
+{
+  Serial.println(buf);
+}
+
+void debug(char *str)
+{
+  if (serialMode == SERIAL_DEBUG)
+    sendSerialPacket(str);
+  else if (serialMode == SERIAL_MEK)
+    sendUdpPacket(str);
+}
+
+void serialDebug(char *str)
+{
+  if (serialMode == SERIAL_DEBUG)
+    sendSerialPacket(str);
+}
+
+void sendMekPacket(char *str)
+{
+  if (serialMode == SERIAL_DEBUG) {
+    sendSerialPacket("TO MEK: ");
+    sendSerialPacket(str);
+  } else if (serialMode == SERIAL_MEK) {
+    sendSerialPacket(str);
+  }
+}
+
+void sendReply(int code)
+{
+  char buf[5];
+  buf[0] = code;
+  buf[1] = 0;
+  
+  sendMekPacket(buf);
 }
 
 char hexDigitToChar(int hexDigit)
@@ -66,40 +110,48 @@ char hexDigitToChar(int hexDigit)
     return base + offset;
 }
 
-void setup() {
+void setup(void) {
   // Open serial communications and wait for port to open:
-  Serial.begin(9600, SERIAL_8N1);
+  Serial.begin(9600, serialVariant);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
 
   // start the Ethernet connection:
 //  if (Ethernet.begin(mac) == 0) {
-    Serial.println("Failed to configure Ethernet using DHCP");
+    serialDebug("Failed to configure Ethernet using DHCP");
     // no point in carrying on, so do nothing forevermore:
     // try to congifure using IP address instead of DHCP:
-    Serial.println("Configuring ethernet");
+    serialDebug("Configuring ethernet");
+  
     Ethernet.begin(mac, ip);
     
  // }
+  
+  // Short delay before sending the initial PNAK to the link master
+  serialDebug("delay...");
+  delay(500);
+  
+  sendReply(REPLY_PNAK);
+  
   // give the Ethernet shield a second to initialize:
-  Serial.println("delay...");
-  delay(1500);
-  Serial.println("connecting...");
+  serialDebug("delay...");
+  delay(500);
+  serialDebug("connecting...");
 
-    Serial.println("Configuring UDP socket");
-    udp.begin(udpListenPort);
-    
+  serialDebug("Configuring UDP socket");
+  udp.begin(udpListenPort);
+  
 }
 
-void loop()
+void loop(void)
 {
      char msgTemplate[] = "Read character <?> <0x??>\n";
      char *message;
      int charOffset = 16;
      int hexOffset = 22;
      delay(500);
-     sendUdpPacket("Hej hej bla bla\n");
+     debug("Hej hej bla bla\n");
 
   // if there are incoming bytes available
   // from the server, read them and print them:
@@ -121,16 +173,14 @@ void loop()
      
      message = msgTemplate;
      
-     Serial.println(message);
-     sendUdpPacket(message);
+     debug(message);
      
      done = 1;
   }
   if (!done) {
      message = "Could not read from serial";
      
-     Serial.println(message);
-     sendUdpPacket(message);
+     debug(message);
   }
 }
 

@@ -59,7 +59,7 @@ void sendUdpPacket(char *buf)
 
 void sendSerialPacket(char *buf)
 {
-  Serial.println(buf);
+  Serial.print(buf);
 }
 
 void debug(char *str)
@@ -119,27 +119,27 @@ void setup(void) {
 
   // start the Ethernet connection:
 //  if (Ethernet.begin(mac) == 0) {
-    serialDebug("Failed to configure Ethernet using DHCP");
+    serialDebug("Failed to configure Ethernet using DHCP\n");
     // no point in carrying on, so do nothing forevermore:
     // try to congifure using IP address instead of DHCP:
-    serialDebug("Configuring ethernet");
+    serialDebug("Configuring ethernet\n");
   
     Ethernet.begin(mac, ip);
     
  // }
   
   // Short delay before sending the initial PNAK to the link master
-  serialDebug("delay...");
+  serialDebug("delay...\n");
   delay(500);
   
   sendReply(REPLY_PNAK);
   
   // give the Ethernet shield a second to initialize:
-  serialDebug("delay...");
+  serialDebug("delay...\n");
   delay(500);
-  serialDebug("connecting...");
+  serialDebug("connecting...\n");
 
-  serialDebug("Configuring UDP socket");
+  serialDebug("Configuring UDP socket\n");
   udp.begin(udpListenPort);
   
 }
@@ -178,7 +178,7 @@ void loop(void)
      done = 1;
   }
   if (!done) {
-     message = "Could not read from serial";
+     message = "Could not read from serial\n";
      
      debug(message);
   }

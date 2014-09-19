@@ -1,0 +1,15 @@
+
+Kontakter på adapterkort, från vänster
+
+Nr	Färg		Funktion	Riktning
+1	Vit		RX+		Myntmek -> AVR
+2	Brun		RX-		Myntmek -> AVR
+3	Svart		TX-		AVR -> Myntmek
+4	Grå		TX+		AVR -> Myntmek
+5	NC
+?	Lila		RX		-> AVR/Arduino
+?	Grön		TX		<- AVR/Arduino
+8	Orange		VCC		<- AVR/Arduino
+9	Svart		GND		<- AVR/Arduino
+
+

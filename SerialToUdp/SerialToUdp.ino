@@ -48,7 +48,11 @@ enum REPLY_CODE {
 };
 
 int serialMode = SERIAL_MEK;
+// Used in myntmek
 int serialVariant = SERIAL_8E1;
+
+// Default when used with PC
+// int serialVariant = SERIAL_8N1;
 
 void sendUdpPacket(char *buf)
 {
@@ -111,6 +115,10 @@ char hexDigitToChar(int hexDigit)
 }
 
 void setup(void) {
+  // Set IO ports to correct mode
+  pinMode(0, INPUT);
+  pinMode(1, OUTPUT);
+  
   // Open serial communications and wait for port to open:
   Serial.begin(9600, serialVariant);
   while (!Serial) {
